@@ -25,5 +25,13 @@
   },
   "dependencies": {
     "flux": "^2.0.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Markionium/d2-flux.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Markionium/d2-flux/issues"
+  },
+  "homepage": "https://github.com/Markionium/d2-flux#readme"
 }
