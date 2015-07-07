@@ -25,10 +25,6 @@ describe('Annotations @StoreConfig', () => {
         annotatedStore = new Store('Default value');
     });
 
-    afterEach(() => {
-        Dispatcher.register.restore();
-    });
-
     it('should be a function', () => {
         expect(StoreConfig).to.be.instanceof(Function);
     });
