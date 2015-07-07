@@ -1,4 +1,7 @@
 'use strict';
 
-//import Dispatcher from './dispatcher';
-//import annotations from './annotations';
+import loglevel from 'loglevel';
+
+loglevel.setLevel(loglevel.levels.INFO, true);
+
+export let log = loglevel;

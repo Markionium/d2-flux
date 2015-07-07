@@ -1,9 +1,12 @@
 'use strict';
 
 import {Dispatcher} from 'flux';
+import {log} from '../index';
 
 class D2FluxDispatcher extends Dispatcher {
     register(...args) {
+        log.debug('Registering callback with dispatcher: ', args[0].toString());
+
         return super.register(...args);
     }
 
@@ -14,6 +17,7 @@ class D2FluxDispatcher extends Dispatcher {
             throw new Error('Dispatcher: Action type can not be undefined');
         }
 
+        log.debug('Dispatching event: ', args);
         return super.dispatch(...args);
     }
 }
