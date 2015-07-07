@@ -70,4 +70,18 @@ describe('Annotation @Actions', () => {
             });
         });
     });
+
+    it('should not call the dispatcher when the action promise rejected', (done) => {
+        userActions.saveUser();
+
+        setTimeout(() => {
+            expect(Dispatcher.dispatch).not.to.be.called;
+
+            saveUserPromiseReject('Mark');
+            setTimeout(() => {
+                expect(Dispatcher.dispatch).not.to.be.called;
+                done();
+            });
+        });
+    });
 });
