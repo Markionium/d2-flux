@@ -4,7 +4,7 @@ node_js:
   - "iojs"
 
 script:
-  - npm test
+  - npm run lint
   - npm run coverage
   - npm run lint
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
