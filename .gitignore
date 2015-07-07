@@ -1,5 +1,11 @@
+# Dev and dep folders
 node_modules/*
-coverage
+coverage/*
 
+# Build folder
 lib/*
+
+# Tools
+*.iml
 npm-debug.log
+.idea
