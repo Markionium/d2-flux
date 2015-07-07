@@ -3,24 +3,24 @@
 import Actions from '../../src/annotations/Actions';
 
 describe('Annotation @Actions', () => {
-	let userActions;
+    let userActions;
 
-	beforeEach(() => {
-		@Actions
-		 class UserActions {
-			addUser() {}
-			deleteUser() {}
-			saveUser() {}
-		};
+    beforeEach(() => {
+        @Actions
+         class UserActions {
+            addUser() {}
+            deleteUser() {}
+            saveUser() {}
+        }
 
-		userActions = new UserActions();
-	});
+        userActions = new UserActions();
+    });
 
-	it('should be a function', () => {
-		expect(Actions).to.be.instanceof(Function);
-	});
+    it('should be a function', () => {
+        expect(Actions).to.be.instanceof(Function);
+    });
 
-	it('should create a symbol key for each of the methods', () => {
-		expect(userActions.ADD_USER).to.not.be.undefined;
-	});
+    it('should create a symbol key for each of the methods', () => {
+        expect(userActions.ADD_USER).to.not.be.undefined;
+    });
 });

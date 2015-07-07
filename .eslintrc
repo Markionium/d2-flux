@@ -1,14 +1,15 @@
 {
-	"ecmaFeatures": {
-		"jsx": true,
-		"modules": true
-	},
-	"env": {
+    "ecmaFeatures": {
+        "jsx": true,
+        "modules": true
+    },
+    "env": {
         "browser": true,
         "es6": true
     },
+    "parser": "babel-eslint",
     "rules": {
-    	"global-strict": [2, "always"],
-    	"quotes": [2, "single"]
+        "global-strict": [2, "always"],
+        "quotes": [2, "single"]
     }
 }

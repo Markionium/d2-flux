@@ -1,3 +1,6 @@
+'use strict';
+/* globals require global */
+
 let chai = require('chai');
 let sinon = require('sinon');
 let sinonChai = require('sinon-chai');
