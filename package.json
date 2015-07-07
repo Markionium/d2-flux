@@ -2,7 +2,7 @@
   "name": "d2-flux",
   "version": "0.1.2",
   "description": "Flux implementation and utilities",
-  "main": "lib/index.js",
+  "main": "index.js",
   "directories": {
     "test": "test"
   },
