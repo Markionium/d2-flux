@@ -11,7 +11,7 @@
     "test-watch": "./node_modules/mocha/bin/_mocha --compilers js:babel-core/register --require test/config/setup.js --watch --recursive test",
     "lint": "./node_modules/eslint/bin/eslint.js src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,spy,stub --rule 'no-unused-expressions: 0' test",
     "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --compilers js:babel-core/register --require test/config/setup.js --recursive test",
-    "build": "./node_modules/babel/bin/babel/index.js src --out-dir lib && cp package.json ./lib/package.json"
+    "build": "./node_modules/babel/bin/babel/index.js src --out-dir dist && cp package.json ./dist/package.json"
   },
   "author": "Mark Polak",
   "license": "BSD-2-Clause",
@@ -28,7 +28,7 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "flux": "^2.0.3",
+    "lodash.isstring": "^3.0.1",
     "loglevel": "^1.3.1",
     "rx": "^2.5.3"
   },
