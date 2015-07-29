@@ -82,6 +82,19 @@ describe('Store', () => {
                 done();
             }, 10);
         });
+
+        it('should not emit an undefined value if no inital value has been given', (done) => {
+            let onNextSpy = spy();
+            store = new Store();
+
+            store.subscribe(onNextSpy);
+
+
+            setTimeout(() => {
+                expect(onNextSpy).not.to.be.called;
+                done();
+            }, 10);
+        });
     });
 
     describe('setState', () => {
