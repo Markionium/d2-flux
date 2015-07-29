@@ -3,7 +3,7 @@ node_modules/*
 coverage/*
 
 # Build folder
-lib/*
+dist/*
 
 # Tools
 *.iml
