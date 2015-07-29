@@ -3,7 +3,7 @@
 import isString from 'lodash.isstring';
 
 import {Subject, Observable} from 'rx';
-import logLevel from 'logLevel';
+import logLevel from 'loglevel';
 
 /**
  * @class Action

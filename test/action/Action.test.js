@@ -1,7 +1,7 @@
 'use strict';
 
 import {Observable} from 'rx';
-import logLevel from 'logLevel';
+import logLevel from 'loglevel';
 
 import Action from '../../src/action/Action';
 
