@@ -21,13 +21,15 @@ class Store extends Observable {
 
         this[observableSymbol] = replaySubject;
 
-        initialValue && Promise.resolve(initialValue)
-            .then(value => {
-                this.setState(value);
-            })
-            .catch(error => {
-                this[publishError](error);
-            });
+        if (initialValue) {
+            Promise.resolve(initialValue)
+                .then(value => {
+                    this.setState(value);
+                })
+                .catch(error => {
+                    this[publishError](error);
+                });
+        }
     }
 
     setState(newState) {
