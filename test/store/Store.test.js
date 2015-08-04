@@ -26,7 +26,7 @@ describe('Store', () => {
             setTimeout(() => {
                 expect(store.state).to.deep.equal({name: 'Mark'});
                 done();
-            }, 10);
+            });
         });
     });
 
@@ -37,7 +37,7 @@ describe('Store', () => {
             setTimeout(() => {
                 expect(store.state).to.deep.equal({name: 'Mark'});
                 done();
-            }, 10);
+            });
         });
 
         it('should reject the value not set the state', (done) => {
@@ -46,7 +46,7 @@ describe('Store', () => {
             setTimeout(() => {
                 expect(store.state).to.deep.equal(undefined);
                 done();
-            }, 10);
+            });
         });
     });
 
@@ -59,7 +59,7 @@ describe('Store', () => {
             setTimeout(() => {
                 expect(store.state).to.deep.equal({name: 'Mark'});
                 done();
-            }, 10);
+            });
         });
 
         it('should emit the newly set state', () => {
@@ -80,7 +80,7 @@ describe('Store', () => {
             setTimeout(() => {
                 expect(onErrorSpy).to.be.called;
                 done();
-            }, 10);
+            });
         });
 
         it('should not emit an undefined value if no inital value has been given', (done) => {
@@ -93,7 +93,7 @@ describe('Store', () => {
             setTimeout(() => {
                 expect(onNextSpy).not.to.be.called;
                 done();
-            }, 10);
+            });
         });
     });
 
@@ -131,14 +131,14 @@ describe('Store', () => {
                 expect(userStore).to.be.instanceof(Store);
                 expect(userStore.state).to.deep.equal({name: 'Mark', userName: 'markpo'});
                 done();
-            }, 10);
+            });
         });
     });
 
     describe('observable methods', () => {
         it('should work as expected', (done) => {
             new Store({name: 'Mark'})
-                .throttle(10)
+                .throttle(1)
                 .subscribe((value) => {
                     expect(value).to.deep.equal({name: 'Mark'});
                     done();
@@ -149,19 +149,19 @@ describe('Store', () => {
             let valueFromObservable;
 
             new Store({name: 'Mark'})
-                .throttle(20)
+                .throttle(2)
                 .subscribe((value) => {
                     valueFromObservable = value;
                 });
 
             setTimeout(() => {
                 expect(valueFromObservable).to.be.undefined;
-            }, 10);
+            }, 0);
 
             setTimeout(() => {
                 expect(valueFromObservable).not.to.be.undefined;
                 done();
-            }, 30);
+            }, 4);
         });
 
         it('should still receive replayed values', (done) => {
@@ -214,6 +214,63 @@ describe('Store', () => {
                 expect(error).to.equal('Rethrown error from source: Failed to load');
                 done();
             });
+        });
+    });
+
+    describe('create()', () => {
+        it('should create a store object', () => {
+            expect(Store.create()).to.be.instanceof(Store);
+        });
+
+        it('should have initialzed the Store with the value of geInitialState', () => {
+            store = Store.create({
+                getInitialState() {
+                    return {name: 'Mark'};
+                }
+            });
+
+            store.subscribe(value => {
+                expect(value).to.deep.equal({name: 'Mark'});
+            });
+        });
+
+        it('should add the passed methods onto the created object', () => {
+            store = Store.create({
+                getInitialState() {
+                    return {name: 'Mark'};
+                },
+
+                getMyCustomValue() {
+
+                }
+            });
+
+            expect(store.getMyCustomValue).to.be.instanceof(Function);
+        });
+
+        it('should not add getInitialState to the result object', () => {
+            store = Store.create({
+                getInitialState() {
+                    return {name: 'Mark'};
+                },
+
+                getMyCustomValue() {
+
+                }
+            });
+
+            expect(store.getInitialState).to.be.undefined;
+        });
+
+        it('should copy properties from the object onto the created object', () => {
+            store = Store.create({
+                name: 'MyStore',
+                getMyCustomValue() {
+
+                }
+            });
+
+            expect(store.name).to.equal('MyStore');
         });
     });
 });

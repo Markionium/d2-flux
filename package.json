@@ -7,8 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/_mocha --compilers js:babel-core/register --require test/config/setup.js --recursive test",
-    "test-watch": "./node_modules/mocha/bin/_mocha --compilers js:babel-core/register --require test/config/setup.js --watch --recursive test",
+    "test": "./node_modules/mocha/bin/_mocha --compilers js:babel-core/register --require test/config/setup.js --recursive test --slow 2",
+    "test-watch": "./node_modules/mocha/bin/_mocha --compilers js:babel-core/register --require test/config/setup.js --watch --recursive test --slow 2",
     "lint": "./node_modules/eslint/bin/eslint.js src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,spy,stub --rule 'no-unused-expressions: 0' test",
     "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --compilers js:babel-core/register --require test/config/setup.js --recursive test",
     "build": "./node_modules/babel/bin/babel/index.js src --out-dir dist && cp package.json ./dist/package.json"

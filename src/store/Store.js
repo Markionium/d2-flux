@@ -57,6 +57,30 @@ class Store extends Observable {
     [publishError](error) {
         return this[observableSymbol].onError(error);
     }
+
+    /******************************************************************************************************************
+     * Static methods
+     *****************************************************************************************************************/
+
+    static create(storeConfig) {
+        let initialState;
+        let mergeObject = {};
+
+        if (storeConfig) {
+            if (storeConfig.getInitialValue) {
+                initialState = storeConfig && storeConfig.getInitialState();
+            }
+
+            Object.keys(storeConfig)
+                .filter(keyName => keyName !== 'getInitialState')
+                .forEach(keyName => {
+                    mergeObject[keyName] = storeConfig[keyName];
+                    return mergeObject;
+                });
+        }
+
+        return Object.assign(new Store(initialState), mergeObject);
+    }
 }
 
 export default Store;
