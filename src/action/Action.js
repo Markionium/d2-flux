@@ -16,32 +16,50 @@ import logLevel from 'loglevel';
  * @see https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/subject.md
  *
  */
-class Action extends Subject {
+const Action = {
     /**
-     * @constructor
+     * @method create
      *
      * @param {String} [name=AnonymousAction]
      *
      * @description
      * A name can be provided that will be used to generate the Action.id Symbol identifier.
      */
-    constructor(name = 'AnonymousAction') {
-        super();
+    create(name = 'AnonymousAction') {
+        const subject = Object.assign(
+            (...actionArgs) => {
+                logLevel.info('Firing action: ' + subject.id.toString());
 
-        Object.defineProperty(this, 'id', {value: Symbol(name)});
+                return Observable.fromPromise(new Promise((resolve, reject) => {
+                    subject.onNext({
+                        //Pass one argument if there is just one else pass the arguments as an array
+                        data: actionArgs.length === 1 ? actionArgs[0] : [...actionArgs],
+                        //Callback to complete the action
+                        complete: (...args) => {
+                            resolve(...args);
+                            logLevel.info('Completed action: ' + subject.id.toString());
+                        },
+                        //Callback to error the action
+                        error: (...args) => {
+                            reject(...args);
+                            logLevel.warn('Errored action: ' + subject.id.toString());
+                        }
+                    });
+                }));
+            },
+            Observable.prototype,
+            Subject.prototype
+        );
 
-        this.execute = (value) => {
-            logLevel.info('Firing action: ' + this.id.toString());
+        Object.defineProperty(subject, 'id', {value: Symbol(name)});
 
-            return Observable.fromPromise(new Promise((resolve, reject) => {
-                this.onNext({value: value, complete: resolve, error: reject});
-            }));
-        };
-    }
+        Subject.call(subject);
+
+        return subject;
+    },
 
     /**
      * @method createActionsFromNames
-     * @static
      *
      * @param {String[]} [actionNames=[]] Names of the actions to create.
      * @param {String} [prefix] Prefix to prepend to all the action identifiers.
@@ -51,7 +69,7 @@ class Action extends Subject {
      * @description
      * Returns an object with the given names as keys and instanced of the Action class as actions.
      */
-    static createActionsFromNames(actionNames = [], prefix = undefined) {
+    createActionsFromNames(actionNames = [], prefix = undefined) {
         let actions = {};
 
         if (prefix && isString(prefix)) {
@@ -61,11 +79,11 @@ class Action extends Subject {
         }
 
         actionNames.forEach(actionName => {
-            actions[actionName] = new this(prefix + actionName);
+            actions[actionName] = this.create(prefix + actionName);
         });
 
         return actions;
     }
-}
+};
 
 export default Action;

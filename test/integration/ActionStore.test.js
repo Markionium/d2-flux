@@ -30,7 +30,7 @@ describe('Integration ActionStore', () => {
     it('store should react to the create action', (done) => {
         crudActions.create
             .subscribe((action) => {
-                store.setState(action.value);
+                store.setState(action.data);
             });
 
         store.subscribe(storeState => {
@@ -38,7 +38,7 @@ describe('Integration ActionStore', () => {
             done();
         });
 
-        crudActions.create.execute('newState');
+        crudActions.create('newState');
     });
 
     it('store fullfil the action result', (done) => {
@@ -47,7 +47,7 @@ describe('Integration ActionStore', () => {
                 store.create(action);
             });
 
-        crudActions.create.execute('newState')
+        crudActions.create('newState')
             .subscribe((createResult) => {
                 expect(createResult).to.equal('created');
                 done();
@@ -61,8 +61,8 @@ describe('Integration ActionStore', () => {
 
         crudActions.create.subscribe(createStub);
 
-        crudActions.create.execute('oldState').subscribe(callbackOld);
-        crudActions.create.execute('newState').subscribe(callbackNew);
+        crudActions.create('oldState').subscribe(callbackOld);
+        crudActions.create('newState').subscribe(callbackNew);
 
         setTimeout(() => {
             expect(createStub.callCount).to.equal(2);

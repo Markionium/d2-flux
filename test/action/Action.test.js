@@ -6,19 +6,21 @@ import logLevel from 'loglevel';
 import Action from '../../src/action/Action';
 
 describe('Action', () => {
-    describe('class', () => {
-        it('should be a function', () => {
-            expect(Action).to.be.instanceof(Function);
-        });
 
+    beforeEach(() => {
+        //Hide logging from test output
+        logLevel.setLevel(logLevel.levels.ERROR);
+    });
+
+    describe('object', () => {
         describe('createActionsFromNames()', () => {
             it('should return an object with Actions', () => {
                 let createdActions = Action.createActionsFromNames(['add', 'edit', 'delete', 'clone']);
 
-                expect(createdActions.add).to.be.instanceof(Action);
-                expect(createdActions.edit).to.be.instanceof(Action);
-                expect(createdActions.delete).to.be.instanceof(Action);
-                expect(createdActions.clone).to.be.instanceof(Action);
+                expect(createdActions.add).to.be.instanceof(Function);
+                expect(createdActions.edit).to.be.instanceof(Function);
+                expect(createdActions.delete).to.be.instanceof(Function);
+                expect(createdActions.clone).to.be.instanceof(Function);
             });
 
             it('should have set the names on the actions', () => {
@@ -57,26 +59,26 @@ describe('Action', () => {
         let actionInstance;
 
         beforeEach(() => {
-            actionInstance = new Action();
+            actionInstance = Action.create();
         });
 
         describe('identifier', () => {
             let action;
 
             it('should create a symbol based on the given name', () => {
-                action = new Action('add');
+                action = Action.create('add');
 
                 expect(action.id.toString()).to.equal('Symbol(add)');
             });
 
             it('should create a symbol with Anonymous name when no name is specified', () => {
-                action = new Action();
+                action = Action.create();
 
                 expect(action.id.toString()).to.equal('Symbol(AnonymousAction)');
             });
 
             it('should not be able to override the id', () => {
-                action = new Action('add');
+                action = Action.create('add');
 
                 expect(() => action.id = 'overridden id').to.throw();
 
@@ -84,76 +86,76 @@ describe('Action', () => {
             });
         });
 
-        describe('execute()', () => {
-            it('should be a function', () => {
-                expect(actionInstance.execute).to.be.instanceof(Function);
-            });
-
+        describe('executing', () => {
             it('should emit to subscribers', (done) => {
                 actionInstance.subscribe(() => {
                     done();
                 });
 
-                actionInstance.execute({name: 'Mark'});
+                actionInstance({name: 'Mark'});
             });
 
             it('should pass the value to the subscriber', (done) => {
                 actionInstance.subscribe((action) => {
-                    expect(action.value).to.deep.equal({name: 'Mark'});
+                    expect(action.data).to.deep.equal({name: 'Mark'});
                     done();
                 });
 
-                actionInstance.execute({name: 'Mark'});
-            });
-
-            it('should always be bound to the action', (done) => {
-                let execute = actionInstance.execute;
-
-                actionInstance.subscribe(() => {
-                    done();
-                });
-
-                execute({name: 'Mark'});
+                actionInstance({name: 'Mark'});
             });
 
             it('should call logLevel.info', () => {
                 spy(logLevel, 'info');
 
-                (new Action('add')).execute('Mark');
+                Action.create('add')('Mark');
 
                 expect(logLevel.info).to.be.calledWith('Firing action: Symbol(add)');
             });
 
             it('should return an Observable', () => {
-                let actionResultObservable = (new Action('add')).execute('Mark');
+                let actionResultObservable = Action.create('add')('Mark');
 
                 expect(actionResultObservable).to.be.instanceof(Observable);
             });
 
             it('should notify the execute subscriber of success', (done) => {
-                actionInstance = new Action('add');
+                actionInstance = Action.create('add');
 
                 actionInstance.subscribe((action) => {
                     action.complete('Added!');
                 });
 
-                actionInstance
-                    .execute('Mark')
+                actionInstance('Mark')
                     .subscribe((value) => {
                         expect(value).to.equal('Added!');
                         done();
                     });
             });
 
+            it('should call logLevel.info when action completed', (done) => {
+                spy(logLevel, 'info');
+
+                actionInstance = Action.create('add');
+
+                actionInstance.subscribe((action) => {
+                    action.complete('Added!');
+                });
+
+                actionInstance('Mark')
+                    .subscribe(() => {
+                        expect(logLevel.info).to.be.calledWith('Completed action: Symbol(add)');
+                        done();
+                    });
+            });
+
             it('should notify the execute subscriber of error', (done) => {
-                actionInstance = new Action('add');
+                actionInstance = Action.create('add');
 
                 actionInstance.subscribe((action) => {
                     action.error('Failed to add!');
                 });
 
-                actionInstance
-                    .execute('Mark')
+                actionInstance('Mark')
                     .subscribe(
                         () => {},
                         (value) => {
@@ -162,15 +164,32 @@ describe('Action', () => {
                         });
             });
 
+            it('should notify the execute subscriber of error', (done) => {
+                spy(logLevel, 'warn');
+
+                actionInstance = Action.create('add');
+
+                actionInstance.subscribe((action) => {
+                    action.error('Failed to add!');
+                });
+
+                actionInstance('Mark')
+                    .subscribe(
+                    () => {},
+                    () => {
+                        expect(logLevel.warn).to.be.calledWith('Errored action: Symbol(add)');
+                        done();
+                    });
+            });
+
             it('should complete the execute subscriber of success', (done) => {
-                actionInstance = new Action('add');
+                actionInstance = Action.create('add');
 
                 actionInstance.subscribe((action) => {
                     action.complete();
                 });
 
-                actionInstance
-                    .execute('Mark')
+                actionInstance('Mark')
                     .subscribe(
                     () => {},
                     () => {},
@@ -179,7 +198,7 @@ describe('Action', () => {
 
             it('should not execute the success handler twice', (done) => {
                 let successHandlerSpy = spy();
-                actionInstance = new Action('add');
+                actionInstance = Action.create('add');
 
                 actionInstance.subscribe((action) => {
                     action.complete();
@@ -189,8 +208,7 @@ describe('Action', () => {
                     action.complete();
                 });
 
-                actionInstance
-                    .execute('Mark')
+                actionInstance('Mark')
                     .subscribe(
                     successHandlerSpy,
                     () => {},
