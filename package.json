@@ -1,6 +1,6 @@
 {
   "name": "d2-flux",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Flux implementation and utilities",
   "main": "index.js",
   "directories": {
