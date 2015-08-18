@@ -11,7 +11,8 @@
     "test-watch": "./node_modules/mocha/bin/_mocha --compilers js:babel-core/register --require test/config/setup.js --watch --recursive test --slow 2",
     "lint": "./node_modules/eslint/bin/eslint.js src && ./node_modules/eslint/bin/eslint.js --env node,mocha --global expect,spy,stub --rule 'no-unused-expressions: 0' test",
     "coverage": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- --compilers js:babel-core/register --require test/config/setup.js --recursive test",
-    "build": "./node_modules/babel/bin/babel/index.js src --out-dir dist && cp package.json ./dist/package.json"
+    "build": "./node_modules/babel/bin/babel/index.js src --out-dir dist && cp package.json ./dist/package.json",
+    "validate": "npm ls"
   },
   "author": "Mark Polak",
   "license": "BSD-2-Clause",
@@ -24,6 +25,7 @@
     "eslint": "^0.24.0",
     "istanbul": "^0.3.17",
     "mocha": "^2.2.5",
+    "precommit-hook": "^3.0.0",
     "sinon": "^1.15.4",
     "sinon-chai": "^2.8.0"
   },
@@ -39,5 +41,10 @@
   "bugs": {
     "url": "https://github.com/Markionium/d2-flux/issues"
   },
-  "homepage": "https://github.com/Markionium/d2-flux#readme"
+  "homepage": "https://github.com/Markionium/d2-flux#readme",
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ]
 }
